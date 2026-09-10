@@ -1,0 +1,158 @@
+# ─────────────────────────────────────────────────────────────
+# RigForge — root .gitignore
+# Layout:  /RigForge.Api  (ASP.NET Core 9)   ·   /web  (Vite + React + TS)
+# IDEs:    Rider · WebStorm · VS Code
+# Machines: Windows 11 · macOS
+# ─────────────────────────────────────────────────────────────
+
+
+# ── .NET build output ────────────────────────────────────────
+bin/
+obj/
+out/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tmp_proj
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+packages/
+!packages/build/
+.nuget/
+
+# Test output
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+coverage/
+*.coverage
+*.coveragexml
+*.trx
+
+# ⚠ DO NOT add Migrations/ here — EF Core migrations must be committed,
+#   or the API cannot create its schema on Render.
+
+
+# ── .NET user & secret files ─────────────────────────────────
+*.user
+*.suo
+*.userprefs
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Local override configs — keep secrets out of a PUBLIC repo.
+# Use `dotnet user-secrets` locally and env vars on Render.
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+*.pfx
+*.key
+*.pem
+
+
+# ── Node / Vite / React ──────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+build/
+.vite/
+*.tsbuildinfo
+
+# Package manager noise — commit exactly ONE lockfile
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.yarn/cache
+.yarn/install-state.gz
+
+# Linters / formatters
+.eslintcache
+.stylelintcache
+.prettiercache
+
+
+# ── Environment files ────────────────────────────────────────
+# Commit .env.example with empty values so a reviewer knows what to set.
+.env
+.env.*
+!.env.example
+
+# NOTE: anything VITE_-prefixed is baked into the public bundle at build
+# time. Cloudinary cloud name + unsigned preset are fine there (they're
+# public by design). Your JWT signing key and Neon connection string
+# are NOT — those live only in Render's env vars.
+
+
+# ── JetBrains (Rider + WebStorm) ─────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# ReSharper / Rider caches
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Rider run configs & local history
+.run/
+*.sln.iml
+
+
+# ── VS Code ──────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+*.code-workspace
+
+
+# ── Docker ───────────────────────────────────────────────────
+docker-compose.override.yml
+.docker/
+*.env.docker
+
+
+# ── OS junk ──────────────────────────────────────────────────
+# macOS (MacBook)
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows (desktop / Lenovo)
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+
+# ── Logs & scratch ───────────────────────────────────────────
+*.log
+logs/
+*.bak
+*.swp
+*~
+.tmp/
+scratch/
