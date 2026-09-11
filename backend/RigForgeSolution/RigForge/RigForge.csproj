@@ -4,6 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>510bef83-4d0a-436f-885c-5ad924e6a5ae</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,7 +21,6 @@
     <ItemGroup>
       <Folder Include="Controllers\" />
       <Folder Include="Data\" />
-      <Folder Include="GCommon\" />
       <Folder Include="Models\" />
     </ItemGroup>
 
