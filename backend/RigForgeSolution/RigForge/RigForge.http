@@ -1,0 +1,6 @@
+@RigForge_HostAddress = http://localhost:5108
+
+GET {{RigForge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
