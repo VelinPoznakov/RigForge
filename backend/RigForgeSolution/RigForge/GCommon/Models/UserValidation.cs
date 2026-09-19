@@ -17,4 +17,7 @@ public static class UserValidation
     public const string PasswordMessage = "Password must be at least 6 characters and contain a number.";
 
     public const string ConfirmPasswordMessage = "Passwords do not match.";
+
+    public const string InvalidCredentialsMessage = "Invalid email or password.";
+    public const string InvalidTokenMessage = "Your session is no longer valid.";
 }

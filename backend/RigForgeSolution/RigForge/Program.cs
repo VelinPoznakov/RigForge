@@ -5,8 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RigForge.Data;
 using RigForge.GCommon.Configuration;
+using RigForge.GCommon.Constants;
 using RigForge.GCommon.Exceptions;
 using RigForge.Models;
+using RigForge.Services;
+using RigForge.Services.Contracts;
 
 using static RigForge.GCommon.Models.UserValidation;
 
@@ -42,6 +45,8 @@ public class Program
 
         builder.Services.Configure<JwtOptions>(jwtSection);
 
+        builder.Services.AddScoped<ITokenService, TokenService>();
+
         builder.Services
             .AddIdentityCore<User>(options =>
             {
@@ -63,6 +68,8 @@ public class Program
             })
             .AddJwtBearer(options =>
             {
+                options.MapInboundClaims = false;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -76,7 +83,10 @@ public class Program
                         Encoding.UTF8.GetBytes(jwtOptions.Key)),
 
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
+
+                    NameClaimType = JwtClaimNames.Username,
+                    RoleClaimType = JwtClaimNames.Role
                 };
             });
 
