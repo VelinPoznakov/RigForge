@@ -26,7 +26,7 @@ public class Program
             ?? throw new ConnectionStringNotFound("Database connection string not found");
 
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionString));
+            options.UseSqlServer(connectionString));
 
         IConfigurationSection jwtSection = builder
             .Configuration

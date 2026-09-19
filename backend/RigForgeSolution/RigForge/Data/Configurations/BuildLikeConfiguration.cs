@@ -16,6 +16,7 @@ public class BuildLikeConfiguration : IEntityTypeConfiguration<BuildLike>
         builder
             .HasOne(l => l.User)
             .WithMany(u => u.Likes)
-            .HasForeignKey(l => l.UserId);
+            .HasForeignKey(l => l.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
