@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RigForge.Dtos.Auth;
+using RigForge.GCommon.Constants;
 using RigForge.GCommon.Extensions;
 using RigForge.Models;
 using RigForge.Services.Contracts;
@@ -61,6 +62,18 @@ public class AuthController : ControllerBase
             this.AddIdentityErrors(result);
 
             return ValidationProblem(ModelState);
+        }
+
+        IdentityResult roleResult = await this.userManager
+            .AddToRoleAsync(user, ApplicationRoles.User);
+
+        if (!roleResult.Succeeded)
+        {
+            this.logger.LogError(
+                "User {UserId} was created but could not be granted {Role}: {ErrorCodes}",
+                user.Id,
+                ApplicationRoles.User,
+                string.Join(", ", roleResult.Errors.Select(error => error.Code)));
         }
 
         this.logger.LogInformation("User {UserId} registered.", user.Id);

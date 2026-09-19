@@ -17,7 +17,7 @@ namespace RigForge;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +60,11 @@ public class Program
         builder.Services.Configure<IdentityOptions>(
             builder.Configuration.GetSection(ConfigurationSections.Identity));
 
+        builder.Services.Configure<AdminOptions>(
+            builder.Configuration.GetSection(ConfigurationSections.Admin));
+
+        builder.Services.AddScoped<IIdentitySeeder, IdentitySeeder>();
+
         builder.Services
             .AddAuthentication(options =>
             {
@@ -98,6 +103,14 @@ public class Program
 
         WebApplication app = builder.Build();
 
+        using (IServiceScope scope = app.Services.CreateScope())
+        {
+            IIdentitySeeder seeder = scope.ServiceProvider
+                .GetRequiredService<IIdentitySeeder>();
+
+            await seeder.SeedAsync();
+        }
+
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -111,6 +124,6 @@ public class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
