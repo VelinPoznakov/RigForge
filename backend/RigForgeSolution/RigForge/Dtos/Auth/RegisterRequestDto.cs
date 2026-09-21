@@ -21,4 +21,8 @@ public class RegisterRequestDto
     [MinLength(PasswordMinLength, ErrorMessage = PasswordMessage)]
     [RegularExpression(PasswordPattern, ErrorMessage = PasswordMessage)]
     public string Password { get; set; } = null!;
+
+    [Required(ErrorMessage = ConfirmPasswordMessage)]
+    [Compare(nameof(Password), ErrorMessage = ConfirmPasswordMessage)]
+    public string ConfirmPassword { get; set; } = null!;
 }

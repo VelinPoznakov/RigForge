@@ -11,6 +11,7 @@ public static class UserValidation
     public const int UsernameMaxLength = 20;
     public const string UsernamePattern = @"^[a-zA-Z0-9._-]+$";
     public const string UsernameMessage = "Username must be 3–20 characters.";
+    public const string UsernameTakenMessage = "That username is already taken.";
 
     public const int PasswordMinLength = 6;
     public const string PasswordPattern = @"^(?=.*\d).{6,}$";
@@ -20,4 +21,7 @@ public static class UserValidation
 
     public const string InvalidCredentialsMessage = "Invalid email or password.";
     public const string InvalidTokenMessage = "Your session is no longer valid.";
+    public const string AccountLockedMessage = "Too many failed attempts. Try again in a few minutes.";
+
+    public const string UserNotFoundMessage = "User not found.";
 }

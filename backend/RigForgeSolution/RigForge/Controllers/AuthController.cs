@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RigForge.Dtos.Auth;
 using RigForge.GCommon.Constants;
 using RigForge.GCommon.Extensions;
 using RigForge.Models;
 using RigForge.Services.Contracts;
+
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 using static RigForge.GCommon.Models.UserValidation;
 
@@ -16,15 +19,18 @@ namespace RigForge.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<User> userManager;
+    private readonly SignInManager<User> signInManager;
     private readonly ITokenService tokenService;
     private readonly ILogger<AuthController> logger;
 
     public AuthController(
         UserManager<User> userManager,
+        SignInManager<User> signInManager,
         ITokenService tokenService,
         ILogger<AuthController> logger)
     {
         this.userManager = userManager;
+        this.signInManager = signInManager;
         this.tokenService = tokenService;
         this.logger = logger;
     }
@@ -36,12 +42,22 @@ public class AuthController : ControllerBase
 
         User? existing = await this.userManager.FindByEmailAsync(email);
 
-        if (existing is not null)
+        if (existing != null)
         {
             this.logger.LogWarning(
                 "Registration rejected: {Email} is already registered.", email);
 
             return Conflict(new { message = EmailTakenMessage });
+        }
+
+        User? existingByUsername = await this.userManager.FindByNameAsync(request.Username);
+
+        if (existingByUsername != null)
+        {
+            this.logger.LogWarning(
+                "Registration rejected: username {Username} is already taken.", request.Username);
+
+            return Conflict(new { message = UsernameTakenMessage });
         }
 
         User user = new User
@@ -50,7 +66,19 @@ public class AuthController : ControllerBase
             UserName = request.Username
         };
 
-        IdentityResult result = await this.userManager.CreateAsync(user, request.Password);
+        IdentityResult result;
+
+        try
+        {
+            result = await this.userManager.CreateAsync(user, request.Password);
+        }
+        catch (DbUpdateException e)
+        {
+            this.logger.LogWarning(e,
+                "Registration rejected: username {Username} was taken by a simultaneous request.", request.Username);
+
+            return Conflict(new { message = UsernameTakenMessage });
+        }
 
         if (!result.Succeeded)
         {
@@ -58,6 +86,16 @@ public class AuthController : ControllerBase
                 "Registration failed for {Email}: {ErrorCodes}",
                 email,
                 string.Join(", ", result.Errors.Select(error => error.Code)));
+
+            if (result.Errors.Any(error => error.Code == nameof(IdentityErrorDescriber.DuplicateEmail)))
+            {
+                return Conflict(new { message = EmailTakenMessage });
+            }
+
+            if (result.Errors.Any(error => error.Code == nameof(IdentityErrorDescriber.DuplicateUserName)))
+            {
+                return Conflict(new { message = UsernameTakenMessage });
+            }
 
             this.AddIdentityErrors(result);
 
@@ -90,16 +128,25 @@ public class AuthController : ControllerBase
 
         User? user = await this.userManager.FindByEmailAsync(email);
 
-        if (user is null)
+        if (user == null)
         {
             this.logger.LogWarning("Login failed for {Email}: no such user.", email);
 
             return Unauthorized(new { message = InvalidCredentialsMessage });
         }
 
-        bool passwordValid = await this.userManager.CheckPasswordAsync(user, request.Password);
+        SignInResult signInResult = await this.signInManager
+            .CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
-        if (!passwordValid)
+        if (signInResult.IsLockedOut)
+        {
+            this.logger.LogWarning(
+                "Login rejected for user {UserId}: account is locked out.", user.Id);
+
+            return StatusCode(StatusCodes.Status423Locked, new { message = AccountLockedMessage });
+        }
+
+        if (!signInResult.Succeeded)
         {
             this.logger.LogWarning(
                 "Login failed for user {UserId}: wrong password.", user.Id);
@@ -120,7 +167,7 @@ public class AuthController : ControllerBase
     {
         Guid? userId = User.GetUserId();
 
-        if (userId is null)
+        if (userId == null)
         {
             this.logger.LogWarning("Token accepted but carries no usable subject claim.");
 
@@ -129,7 +176,7 @@ public class AuthController : ControllerBase
 
         User? user = await this.userManager.FindByIdAsync(userId.Value.ToString());
 
-        if (user is null)
+        if (user == null)
         {
             this.logger.LogWarning(
                 "Token references user {UserId}, which no longer exists.", userId.Value);
@@ -151,8 +198,7 @@ public class AuthController : ControllerBase
 
         return new AuthResponseDto
         {
-            Token = this.tokenService.GenerateAccessToken(user, roles),
-            User = MapUser(user, roles)
+            Token = this.tokenService.GenerateAccessToken(user, roles)
         };
     }
 

@@ -1,6 +1,179 @@
-@RigForge_HostAddress = http://localhost:5108
+@RigForge_HostAddress = https://localhost:7280
 
-GET {{RigForge_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register (stores the token for the requests below)
+POST {{RigForge_HostAddress}}/api/auth/register
+Content-Type: application/json
 
-###
+{
+  "email": "tester@rigforge.dev",
+  "username": "tester",
+  "password": "secret1",
+  "confirmPassword": "secret1"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Login (stores the token for the requests below)
+POST {{RigForge_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "tester@rigforge.dev",
+  "password": "secret1"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Health check (no auth)
+GET {{RigForge_HostAddress}}/health
+
+### Current user (stores userId)
+GET {{RigForge_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+> {% client.global.set("userId", response.body.user.id); %}
+
+### List builds (newest first)
+GET {{RigForge_HostAddress}}/api/builds?page=1&pageSize=12
+
+### List builds (search title/CPU/GPU + purpose + price range + sort)
+GET {{RigForge_HostAddress}}/api/builds?search=rtx&purpose=Gaming&minPrice=1000&maxPrice=2500&sort=MostLiked
+
+### Create build (needs build.jpg next to this file; returns 201 with no body)
+POST {{RigForge_HostAddress}}/api/builds
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=RigForgeBoundary
+
+--RigForgeBoundary
+Content-Disposition: form-data; name="title"
+
+My Gaming Rig
+--RigForgeBoundary
+Content-Disposition: form-data; name="purpose"
+
+Gaming
+--RigForgeBoundary
+Content-Disposition: form-data; name="cpu"
+
+AMD Ryzen 7 7800X3D
+--RigForgeBoundary
+Content-Disposition: form-data; name="gpu"
+
+NVIDIA RTX 4070 Super
+--RigForgeBoundary
+Content-Disposition: form-data; name="ram"
+
+32GB DDR5 6000
+--RigForgeBoundary
+Content-Disposition: form-data; name="storage"
+
+2TB NVMe SSD
+--RigForgeBoundary
+Content-Disposition: form-data; name="psu"
+
+Corsair RM850x
+--RigForgeBoundary
+Content-Disposition: form-data; name="priceEur"
+
+1849.99
+--RigForgeBoundary
+Content-Disposition: form-data; name="description"
+
+A quiet 1440p gaming build with plenty of headroom for upgrades.
+--RigForgeBoundary
+Content-Disposition: form-data; name="image"; filename="build.jpg"
+Content-Type: image/jpeg
+
+< ./build.jpg
+--RigForgeBoundary--
+
+### My builds / a user's profile builds (stores your newest build's id as buildId)
+GET {{RigForge_HostAddress}}/api/users/{{userId}}/builds?page=1&pageSize=12
+
+> {% client.global.set("buildId", response.body.items[0].id); %}
+
+### Build details
+GET {{RigForge_HostAddress}}/api/builds/{{buildId}}
+Authorization: Bearer {{token}}
+
+### Update build (image is optional; omit it to keep the current one)
+PUT {{RigForge_HostAddress}}/api/builds/{{buildId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=RigForgeBoundary
+
+--RigForgeBoundary
+Content-Disposition: form-data; name="title"
+
+My Gaming Rig v2
+--RigForgeBoundary
+Content-Disposition: form-data; name="purpose"
+
+Gaming
+--RigForgeBoundary
+Content-Disposition: form-data; name="cpu"
+
+AMD Ryzen 7 7800X3D
+--RigForgeBoundary
+Content-Disposition: form-data; name="gpu"
+
+NVIDIA RTX 4080 Super
+--RigForgeBoundary
+Content-Disposition: form-data; name="ram"
+
+32GB DDR5 6000
+--RigForgeBoundary
+Content-Disposition: form-data; name="storage"
+
+2TB NVMe SSD
+--RigForgeBoundary
+Content-Disposition: form-data; name="psu"
+
+Corsair RM1000x
+--RigForgeBoundary
+Content-Disposition: form-data; name="priceEur"
+
+2299.00
+--RigForgeBoundary
+Content-Disposition: form-data; name="description"
+
+Upgraded the GPU and PSU for 4K. Still quiet under load.
+--RigForgeBoundary--
+
+### Like build
+POST {{RigForge_HostAddress}}/api/builds/{{buildId}}/like
+Authorization: Bearer {{token}}
+
+### Unlike build
+DELETE {{RigForge_HostAddress}}/api/builds/{{buildId}}/like
+Authorization: Bearer {{token}}
+
+### Add comment
+POST {{RigForge_HostAddress}}/api/builds/{{buildId}}/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "Great airflow on this one!"
+}
+
+### List comments for a build (stores the newest comment's id as commentId)
+GET {{RigForge_HostAddress}}/api/builds/{{buildId}}/comments?page=1&pageSize=12
+
+> {% client.global.set("commentId", response.body.items[0].id); %}
+
+### Edit comment
+PUT {{RigForge_HostAddress}}/api/comments/{{commentId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "Great airflow and cable management!"
+}
+
+### Delete comment
+DELETE {{RigForge_HostAddress}}/api/comments/{{commentId}}
+Authorization: Bearer {{token}}
+
+### Delete build
+DELETE {{RigForge_HostAddress}}/api/builds/{{buildId}}
+Authorization: Bearer {{token}}

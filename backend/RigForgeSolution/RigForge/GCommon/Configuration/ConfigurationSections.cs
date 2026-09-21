@@ -7,4 +7,6 @@ public static class ConfigurationSections
     public const string Jwt = "Jwt";
 
     public const string Admin = "Admin";
+
+    public const string CorsOrigins = "CorsOrigins";
 }

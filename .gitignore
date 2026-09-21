@@ -64,6 +64,13 @@ secrets.json
 *.pem
 
 
+# ── User uploads (served from wwwroot) ───────────────────────
+backend/RigForgeSolution/RigForge/wwwroot/*.jpg
+backend/RigForgeSolution/RigForge/wwwroot/*.jpeg
+backend/RigForgeSolution/RigForge/wwwroot/*.png
+backend/RigForgeSolution/RigForge/wwwroot/*.webp
+
+
 # ── Node / Vite / React ──────────────────────────────────────
 node_modules/
 dist/

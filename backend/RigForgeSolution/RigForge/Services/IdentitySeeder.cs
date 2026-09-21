@@ -76,7 +76,7 @@ public class IdentitySeeder : IIdentitySeeder
 
         User? admin = await this.userManager.FindByEmailAsync(email);
 
-        if (admin is null)
+        if (admin == null)
         {
             admin = new User
             {
