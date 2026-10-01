@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -40,6 +41,19 @@ public class Program
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
+
+        DatabaseOptions databaseOptions = builder
+            .Configuration
+            .GetSection(ConfigurationSections.Database)
+            .Get<DatabaseOptions>() ?? new DatabaseOptions();
+
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+            options.KnownIPNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
 
         IConfigurationSection jwtSection = builder
             .Configuration
@@ -184,11 +198,21 @@ public class Program
 
         using (IServiceScope scope = app.Services.CreateScope())
         {
+            if (databaseOptions.MigrateOnStartup)
+            {
+                AppDbContext dbContext = scope.ServiceProvider
+                    .GetRequiredService<AppDbContext>();
+
+                await dbContext.Database.MigrateAsync();
+            }
+
             IIdentitySeeder seeder = scope.ServiceProvider
                 .GetRequiredService<IIdentitySeeder>();
 
             await seeder.SeedAsync();
         }
+
+        app.UseForwardedHeaders();
 
         if (!app.Environment.IsDevelopment())
         {
@@ -207,7 +231,10 @@ public class Program
             });
         }
 
-        app.UseHttpsRedirection();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
 
         app.UseCors(CorsPolicies.Frontend);
 

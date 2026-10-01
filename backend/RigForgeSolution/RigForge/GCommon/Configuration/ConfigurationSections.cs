@@ -9,4 +9,6 @@ public static class ConfigurationSections
     public const string Admin = "Admin";
 
     public const string CorsOrigins = "CorsOrigins";
+
+    public const string Database = "Database";
 }
