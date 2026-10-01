@@ -11,4 +11,6 @@ public static class ConfigurationSections
     public const string CorsOrigins = "CorsOrigins";
 
     public const string Database = "Database";
+
+    public const string OpenApi = "OpenApi";
 }

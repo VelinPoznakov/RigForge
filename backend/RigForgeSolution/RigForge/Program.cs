@@ -47,6 +47,11 @@ public class Program
             .GetSection(ConfigurationSections.Database)
             .Get<DatabaseOptions>() ?? new DatabaseOptions();
 
+        OpenApiOptions openApiOptions = builder
+            .Configuration
+            .GetSection(ConfigurationSections.OpenApi)
+            .Get<OpenApiOptions>() ?? new OpenApiOptions();
+
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -221,7 +226,7 @@ public class Program
 
         app.UseStatusCodePages();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || openApiOptions.Enabled)
         {
             app.MapOpenApi();
 
