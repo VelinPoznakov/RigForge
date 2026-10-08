@@ -252,6 +252,21 @@ public class Program
             FileProvider = new PhysicalFileProvider(webRootPath)
         });
 
+        // The React build is copied here by the root Dockerfile; absent when running with dotnet run.
+        string clientPath = Path.Combine(app.Environment.ContentRootPath, StorageFolders.Client);
+
+        PhysicalFileProvider? clientFileProvider = Directory.Exists(clientPath)
+            ? new PhysicalFileProvider(clientPath)
+            : null;
+
+        if (clientFileProvider != null)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = clientFileProvider
+            });
+        }
+
         app.UseAuthentication();
 
         app.UseAuthorization();
@@ -259,6 +274,18 @@ public class Program
         app.MapControllers();
 
         app.MapHealthChecks(HealthCheckRoutes.Health);
+
+        if (clientFileProvider != null)
+        {
+            // Unknown API routes stay 404 instead of returning the React page.
+            app.MapFallback("/api/{**path}", () => Results.NotFound());
+
+            // Any other unknown URL is a React Router route, so serve index.html.
+            app.MapFallbackToFile("index.html", new StaticFileOptions
+            {
+                FileProvider = clientFileProvider
+            });
+        }
 
         await app.RunAsync();
     }
