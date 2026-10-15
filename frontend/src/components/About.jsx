@@ -42,15 +42,15 @@ export default function About(){
                     <h2 className="text-lg font-bold tracking-tight">Builds for every purpose</h2>
                     <div className="flex flex-wrap gap-2">
                         <span
-                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong bg-field text-ink-soft">Gaming</span>
+                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong hover:bg-accent-hover bg-field text-ink-soft">Gaming</span>
                         <span
-                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong bg-field text-ink-soft">Development</span>
+                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong hover:bg-accent-hover bg-field text-ink-soft">Development</span>
                         <span
-                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong bg-field text-ink-soft">Workstation</span>
+                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong hover:bg-accent-hover bg-field text-ink-soft">Workstation</span>
                         <span
-                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong bg-field text-ink-soft">Budget</span>
+                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong hover:bg-accent-hover bg-field text-ink-soft">Budget</span>
                         <span
-                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong bg-field text-ink-soft">HTPC</span>
+                            className="inline-flex h-8 shrink-0 cursor-default items-center rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors border-line-strong hover:bg-accent-hover bg-field text-ink-soft">HTPC</span>
                     </div>
                 </section>
 
