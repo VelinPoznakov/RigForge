@@ -1,11 +1,8 @@
-import { useState } from "react";
 import Navbar from "./Navbar.jsx";
 import {Link} from "react-router";
 import {publicRoutes} from "../ utils/ApplicationUrlPaths.js";
 
 export default function Header(){
-
-    const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <header className="sticky top-0 z-50 border-b border-line bg-surface">
@@ -15,19 +12,17 @@ export default function Header(){
                     <span className="size-3 rounded-xs bg-accent"></span>RIGFORGE
                 </Link>
 
-                <button type="button"
-                        className="ml-auto grid size-10 place-items-center rounded-md border border-line-strong md:hidden"
-                        aria-label="Toggle menu"
-                        aria-expanded={menuOpen}
-                        aria-controls="main-nav"
-                        onClick={() => setMenuOpen(!menuOpen)}>
+                <input type="checkbox" id="nav-toggle" className="peer sr-only"/>
+                <label htmlFor="nav-toggle"
+                       className="ml-auto grid size-10 cursor-pointer place-items-center rounded-md border border-line-strong md:hidden"
+                       aria-label="Toggle menu">
                     <svg className="size-5 text-ink-soft" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M4 7h16M4 12h16M4 17h16"/>
                     </svg>
-                </button>
+                </label>
 
-                <Navbar isOpen={menuOpen} />
+                <Navbar />
 
             </div>
         </header>
