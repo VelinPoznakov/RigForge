@@ -12,15 +12,16 @@ import Profile from "./components/Profile.jsx";
 import NotFound from "./components/NotFound.jsx";
 import RouteGuard from "./components/RouteGuard.jsx";
 import Footer from "./components/Footer.jsx";
+import Header from "./components/Header.jsx";
 
 function App() {
 
   return (
     <>
-        {/*nav bar*/}
+        <Header />
 
         <Routes>
-            <Route path={publicRoutes.home} element={<Home />} />
+            <Route index element={<Home />} />
             <Route path={publicRoutes.about} element={<About />} />
             <Route path={publicRoutes.login} element={<Login />} />
             <Route path={publicRoutes.register} element={<Register />} />
