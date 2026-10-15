@@ -11,6 +11,7 @@ import EditBuild from "./components/EditBuild.jsx";
 import Profile from "./components/Profile.jsx";
 import NotFound from "./components/NotFound.jsx";
 import RouteGuard from "./components/RouteGuard.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
 
@@ -37,7 +38,8 @@ function App() {
 
         </Routes>
 
-        {/*create footer here*/}
+        <Footer />
+
     </>
   )
 }
