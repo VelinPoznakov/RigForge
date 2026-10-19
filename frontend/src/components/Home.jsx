@@ -1,4 +1,13 @@
 export default function Home(){
+    /* Todo:
+        count builds fetch,
+         purpose click,
+          builds fetch,
+          pagination,
+          likes and is the liked this,
+          search bar,
+          better dropdown
+    */
 
     return(
         <main className="flex-1 pt-7 pb-14 sm:pt-10 sm:pb-18">
@@ -13,25 +22,58 @@ export default function Home(){
                     </div>
 
                     {/* sort: Newest | Oldest | MostLiked | PriceAscending | PriceDescending */}
-                    <label
-                        className="relative flex h-9 cursor-pointer items-center gap-2 rounded-md border border-line-strong bg-card pr-8 pl-2.5 text-[13px] max-sm:justify-between">
-                        <span className="text-ink-dim">Sort</span>
-                        <select
-                            className="cursor-pointer appearance-none bg-transparent font-semibold text-ink focus:outline-none"
-                            name="sort">
-                            <option className="bg-card" value="Newest">Newest</option>
-                            <option className="bg-card" value="Oldest">Oldest</option>
-                            <option className="bg-card" value="MostLiked" selected>Most liked</option>
-                            <option className="bg-card" value="PriceAscending">Price: low to high</option>
-                            <option className="bg-card" value="PriceDescending">Price: high to low</option>
-                        </select>
-                        <svg
-                            className="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-ink-muted"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round">
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    </label>
+                    <div className="relative max-sm:w-full">
+                        {/* trigger button */}
+                        <button
+                            type="button"
+                            className="flex h-9 w-full items-center gap-2 rounded-md border border-accent bg-card pr-2.5 pl-3 text-[13px] transition-colors max-sm:justify-between">
+                            <span className="text-ink-dim">Sort</span>
+                            <span className="font-semibold text-ink">Most liked</span>
+                            <svg className="size-3.5 rotate-180 text-ink-muted transition-transform" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </button>
+
+                        {/* options list (shown when open) */}
+                        <ul className="absolute top-full right-0 z-20 mt-2 w-56 rounded-[10px] border border-line-strong bg-card p-1 shadow-lg shadow-black/40 max-sm:left-0 max-sm:w-full">
+                            <li>
+                                <button type="button"
+                                        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-field hover:text-ink">
+                                    Newest
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-field hover:text-ink">
+                                    Oldest
+                                </button>
+                            </li>
+                            {/* selected option: orange + check mark */}
+                            <li>
+                                <button type="button"
+                                        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-accent transition-colors hover:bg-field">
+                                    Most liked
+                                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                                         strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M20 6 9 17l-5-5"/>
+                                    </svg>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-field hover:text-ink">
+                                    Price: low to high
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-field hover:text-ink">
+                                    Price: high to low
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <form className="mb-7 flex flex-wrap items-center gap-3" role="search">
