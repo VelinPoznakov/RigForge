@@ -177,3 +177,7 @@ Authorization: Bearer {{token}}
 ### Delete build
 DELETE {{RigForge_HostAddress}}/api/builds/{{buildId}}
 Authorization: Bearer {{token}}
+
+### Logout (stateless: the client discards the token afterwards)
+POST {{RigForge_HostAddress}}/api/auth/logout
+Authorization: Bearer {{token}}
