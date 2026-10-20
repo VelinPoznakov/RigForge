@@ -192,6 +192,26 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout()
+    {
+        Guid? userId = User.GetUserId();
+
+        if (userId == null)
+        {
+            this.logger.LogWarning("Token accepted but carries no usable subject claim.");
+
+            return Unauthorized();
+        }
+
+        // Access tokens are stateless, so there is nothing to revoke here: the client drops
+        // the token it holds. The endpoint gives the client one place to call and logs the event.
+        this.logger.LogInformation("User {UserId} logged out.", userId.Value);
+
+        return Ok();
+    }
+
     private async Task<AuthResponseDto> BuildAuthResponseAsync(User user)
     {
         IList<string> roles = await this.userManager.GetRolesAsync(user);
