@@ -68,23 +68,8 @@ export default function fetchData(initialState, path='/'){
     return {data, setData, errors, loading};
 }
 
-export function mutate(method, path, data, initialState, includeFile, opt={}) {
-
-    const [result, setResult] = useState(initialState);
-    const [errors, setErrors] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const send = () => {
-        setLoading(true);
-        setErrors(null);
-
-        return baseRequest(method, path, data, includeFile, opt)
-            .then(result => setResult(result))
-            .catch(err => setErrors(err))
-            .finally(() => setLoading(false));
-    }
-
-    return {send, result, setResult, errors, loading};
+export async function mutate(method, path, data = null, includeFile = false, opt = {}) {
+    return baseRequest(method, path, data, includeFile, opt);
 }
 
 function formatErrors(status, body = null, isInternalError = false){
