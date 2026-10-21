@@ -1,12 +1,11 @@
 import {NavLink} from "react-router";
 import {protectedRoutes, publicRoutes} from "../ utils/ApplicationUrlPaths.js";
+import {useContext} from "react";
+import AuthContext from "../contexts/authContext.jsx";
 
 export default function Navbar(){
 
-    const user = {
-        userId: 'user id',
-        username: 'test'
-    }
+    const {isAuthenticated} = useContext(AuthContext);
 
     const navlinkClass = ({isActive}) => {
         return `rounded-md px-2 py-2.5 text-[13px] transition-colors md:px-0 md:py-1.5 ${
@@ -24,7 +23,7 @@ export default function Navbar(){
                     className={navlinkClass}
                     to={publicRoutes.home}>Catalog</NavLink></li>
 
-                {user && (
+                {isAuthenticated && (
                     <li>
                         <NavLink
                             className={navlinkClass}

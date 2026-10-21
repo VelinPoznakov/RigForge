@@ -1,12 +1,11 @@
 import { Link } from 'react-router'
 import { publicRoutes, protectedRoutes } from "../ utils/ApplicationUrlPaths.js";
+import {useContext} from "react";
+import AuthContext from "../contexts/authContext.jsx";
 
 export default function Footer(){
 
-    const user = {
-        userId: 'user id',
-        username: 'test'
-    }
+    const {isAuthenticated} = useContext(AuthContext);
 
     return (
         <footer className="border-t border-line bg-surface">
@@ -32,7 +31,7 @@ export default function Footer(){
                 </nav>
 
 
-                {user ?
+                {isAuthenticated ?
                     (<nav>
                         <h2 className="mb-3 font-mono text-[11px] tracking-widest text-ink-dim uppercase">Builds</h2>
                         <ul className="flex flex-col gap-2 text-sm">
