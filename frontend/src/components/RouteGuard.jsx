@@ -1,9 +1,15 @@
-import {Outlet} from "react-router";
+import {Navigate, Outlet} from "react-router";
+import useAuth from "../hooks/useAuth.js";
+import {publicRoutes} from "../ utils/ApplicationUrlPaths.js";
 
 export default function RouteGuard(){
 
-    // check the user here
+    const {isAuthenticated} = useAuth();
+
+    if(!isAuthenticated)
+        return <Navigate to={publicRoutes.login} replace />;
+
     return(
         <Outlet />
-    )
+    );
 }
