@@ -14,7 +14,7 @@ export default function Register(){
                 </div>
 
                 <form className="flex flex-col gap-4">
-                    // <!-- 409: "That email is already registered." / "That username is already taken." -->
+                    {/* 409: "That email is already registered." / "That username is already taken." */}
                     <div className="rounded-md border border-danger/35 bg-danger/10 px-3.5 py-2.5 text-sm text-[#ff8a87]" hidden>That username is already taken.</div>
 
                     <div className="flex flex-col gap-1.5">
@@ -34,7 +34,7 @@ export default function Register(){
                         <span className="text-xs text-ink-dim">At least 6 characters, including a number.</span>
                     </div>
 
-                    // <!-- example of a field with a validation error -->
+                    {/* example of a field with a validation error */}
                     <div className="flex flex-col gap-1.5">
                         <label className="text-[13px] font-semibold text-ink-soft" for="confirmPassword">Confirm password</label>
                         <input className="w-full rounded-md border border-danger bg-field px-3 py-2.5 text-sm text-ink transition placeholder:text-ink-dim focus:ring-3 focus:ring-danger/15 focus:outline-none" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" />
