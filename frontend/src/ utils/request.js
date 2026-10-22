@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
@@ -42,11 +42,12 @@ export async function baseRequest(method='GET', path='/', data=null, includeFile
     return result;
 }
 
-export default function fetchData(initialState, path='/'){
+export default function useFetchData(initialState, path='/'){
 
     const [data, setData] = useState(initialState);
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -63,9 +64,11 @@ export default function fetchData(initialState, path='/'){
             abortController.abort();
         }
 
-    }, [path])
+    }, [path, refresh])
 
-    return {data, setData, errors, loading};
+    const onRefresh = () => setRefresh(!refresh);
+
+    return {data, setData, errors, loading, onRefresh};
 }
 
 export async function mutate(method, path, data = null, includeFile = false, opt = {}) {
@@ -95,5 +98,16 @@ function getAuthHeaders(){
     const token = data ? JSON.parse(data).token : null;
 
     return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export function toQueryString(params) {
+    const query = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(params)) {
+        if (value !== '' && value !== null && value !== undefined)
+            query.append(key, value);
+    }
+
+    return query.toString();
 }
 
