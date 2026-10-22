@@ -47,6 +47,12 @@ export default function Home(){
         setIsSortDropdownOpened(!isSortDropdownOpened);
     }
 
+    const selectFromDropdown = (option) => {
+        selectedFilter(option);
+        setPage(1);
+        setIsSortDropdownOpened(false);
+    }
+
     const goToPage = (newPage) => {
         setPage(newPage);
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -82,7 +88,7 @@ export default function Home(){
                                 <li key={option.key}>
                                     {filter.value === option.value ?
                                         (<button type="button"
-                                                 onClick={() => { selectedFilter(option); setPage(1); }}
+                                                 onClick={() => selectFromDropdown(option)}
                                                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-accent transition-colors hover:bg-field">
                                             {option.value}
                                             <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
@@ -92,7 +98,7 @@ export default function Home(){
                                         </button>)
                                         :
                                         (<button type="button"
-                                                 onClick={() => selectedFilter(option)}
+                                                 onClick={() => selectFromDropdown(option)}
                                                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-field hover:text-ink">
                                             {option.value}
                                         </button>)}
