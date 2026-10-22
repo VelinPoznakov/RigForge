@@ -1,13 +1,25 @@
+import useFetchData from "../ utils/request.js";
+import Spinner from "./Loading.jsx";
+import {Link, useParams} from "react-router";
+import {publicRoutes} from "../ utils/ApplicationUrlPaths.js";
+
 export default function UserBuilds(){
+    const {id} = useParams();
+    const {data, setData, loading: isLoading} = useFetchData(
+        {items: [], page: 1, pageSize: 12, totalCount: 0, totalPages: 0},
+        `/api/users/${id}/builds?page=1&pageSize=12`)
+
+    if(isLoading)
+        return <Spinner />;
 
     return(
         <main className="flex-1 pt-7 pb-14 sm:pt-10 sm:pb-18">
             {/* Data: GET /api/users/{id}/builds (always newest first, no filters) */}
             <div className="mx-auto w-full max-w-site px-4 sm:px-6">
-                <a className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-ink-muted hover:text-ink" href="../home/home.html">
+                <Link className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-ink-muted hover:text-ink" to={publicRoutes.home}>
                     <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
                     Back to catalog
-                </a>
+                </Link>
 
                 {/* username: from the link state or items[0].owner.username (no user endpoint) */}
                 <section className="mb-8 flex items-center gap-3.5 sm:gap-5">
