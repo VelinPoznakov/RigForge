@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
     const contextValue = {
         accessToken: auth?.token,
         user: auth?.user,
-        isAuthenticated: !!auth,
+        isAuthenticated: !!auth && decodeToken(auth.token).expiresAt > Date.now(),
         register,
         login,
         logout,

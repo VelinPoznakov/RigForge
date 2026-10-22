@@ -16,5 +16,6 @@ export function decodeToken(token) {
         email: claims.email,
         username: claims.username,
         roles: [].concat(claims.role ?? []),
+        expiresAt: claims.exp * 1000,
     };
 }
