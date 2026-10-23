@@ -3,6 +3,8 @@ import {useRef, useState} from "react";
 import Spinner from "./Loading.jsx";
 import BuildCollection from "./BuildCollection.jsx";
 import {filtersOptions, rigPurposes} from "../ utils/ApplicationConstants.js";
+import Pagination from "./Pagination.jsx";
+import ErrorLoadingBuilds from "./ErrorLoadingBuilds.jsx";
 
 const defaultOptions = {
     search: '',
@@ -51,11 +53,6 @@ export default function Home(){
         selectedFilter(option);
         setPage(1);
         setIsSortDropdownOpened(false);
-    }
-
-    const goToPage = (newPage) => {
-        setPage(newPage);
-        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     return(
@@ -154,23 +151,7 @@ export default function Home(){
 
                 {isLoading && <Spinner />}
 
-                {!isLoading && errors && (
-                    <div
-                        className="rounded-[14px] border border-dashed border-danger/35 bg-danger/10 px-6 py-14 text-center text-[#ff8a87]"
-                        role="alert">
-                        <h3 className="mb-1.5 text-base font-semibold text-ink">Could not load builds</h3>
-                        <p>
-                            {errors.isInternalError
-                                ? 'Could not reach the server. Check your connection and try again.'
-                                : errors.general ?? Object.values(errors.messages)[0] ?? 'Something went wrong. Try again.'}
-                        </p>
-                        <button type="button"
-                                onClick={() => window.location.reload()}
-                                className="inline-flex h-9.5 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold whitespace-nowrap transition-colors border border-line-strong bg-field text-ink hover:border-ink-dim mt-5">
-                            Try again
-                        </button>
-                    </div>
-                )}
+                {<ErrorLoadingBuilds isLoading={isLoading} errors={errors} />}
 
                 {!isLoading && !errors && <BuildCollection builds={data.items} onLike={onRefresh}/>}
 
@@ -186,36 +167,7 @@ export default function Home(){
                         </button>
                     </div>)}
 
-                {data.totalPages > 1 && (
-                    <nav className="mt-10 flex flex-wrap justify-center gap-1.5" aria-label="Pages">
-                        <button type="button"
-                                onClick={() => goToPage(page - 1)}
-                                disabled={page === 1}
-                                className="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md border px-2.5 font-mono text-[13px] border-line bg-card text-ink-soft hover:border-line-strong disabled:pointer-events-none disabled:opacity-40">
-                            ‹ Prev
-                        </button>
-
-                        {Array.from({length: data.totalPages}, (_, i) => i + 1).map(pageNumber =>
-                            <button type="button"
-                                    key={pageNumber}
-                                    onClick={() => goToPage(pageNumber)}
-                                    aria-current={pageNumber === page ? 'page' : undefined}
-                                    className={`inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md border px-2.5 font-mono text-[13px] ${
-                                        pageNumber === page
-                                            ? 'border-accent bg-accent/10 text-accent'
-                                            : 'border-line bg-card text-ink-soft hover:border-line-strong'}`}>
-                                {pageNumber}
-                            </button>
-                        )}
-
-                        <button type="button"
-                                onClick={() => goToPage(page + 1)}
-                                disabled={page >= data.totalPages}
-                                className="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md border px-2.5 font-mono text-[13px] border-line bg-card text-ink-soft hover:border-line-strong disabled:pointer-events-none disabled:opacity-40">
-                            Next ›
-                        </button>
-                    </nav>
-                )}
+                {<Pagination page={page} setPage={setPage} totalPages={data.totalPages} />}
             </div>
         </main>
     );

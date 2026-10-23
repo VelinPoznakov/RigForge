@@ -17,7 +17,8 @@ export default function Build(
         likesCount,
         isLikedByCurrentUser,
         createdAt,
-        onLike
+        onLike,
+        showUser= true
     }){
 
     const {isAuthenticated} = useAuth();
@@ -88,13 +89,17 @@ export default function Build(
                     <dd>{ram}</dd>
                 </dl>
                 <div className="mt-auto flex items-center justify-between gap-3 border-t border-line pt-3">
-                    <Link className="relative z-10 flex min-w-0 items-center gap-2 text-xs text-ink-muted hover:text-ink"
-                       to={publicRoutes.userBuilds(owner.id)}>
+                    {showUser ?
+                        (<Link className="relative z-10 flex min-w-0 items-center gap-2 text-xs text-ink-muted hover:text-ink"
+                               to={publicRoutes.userBuilds(owner.id)}>
                                     <span
                                         className="grid shrink-0 place-items-center rounded-full border border-line-strong bg-avatar font-semibold text-ink-soft uppercase size-5 text-[9px]">{owner.username[0]}</span>
-                        <span className="truncate">{owner.username}</span>
-                        <span className="whitespace-nowrap text-ink-dim">· {timeAgo(createdAt)}</span>
-                    </Link>
+                            <span className="truncate">{owner.username}</span>
+                            <span className="whitespace-nowrap text-ink-dim">· {timeAgo(createdAt)}</span>
+                        </Link>)
+                        :
+                        (<span className="whitespace-nowrap text-ink-dim">{timeAgo(createdAt)}</span>)
+                    }
                     <span
                         className="font-mono text-[15px] font-bold whitespace-nowrap text-accent">{priceEur}<span
                         className="ml-0.5 text-[10px] font-medium text-ink-dim">€</span></span>
