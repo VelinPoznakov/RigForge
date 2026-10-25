@@ -2,17 +2,15 @@
 FROM node:24-alpine AS frontend
 WORKDIR /src/frontend
 
-# The frontend is only built once frontend/package-lock.json is committed on the
-# deployed branch. Until then this stage outputs an empty dist and the image is API only.
-COPY frontend/package*.json ./
-RUN if [ -f package-lock.json ]; then npm ci; fi
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
 
 COPY frontend/ ./
 
 # Empty = the React app calls /api/... on the same address it was served from.
 ARG VITE_API_URL=
 ENV VITE_API_URL=$VITE_API_URL
-RUN if [ -f package-lock.json ]; then npm run build; else mkdir -p dist; fi
+RUN npm run build && test -f dist/index.html
 
 # Backend build
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend
