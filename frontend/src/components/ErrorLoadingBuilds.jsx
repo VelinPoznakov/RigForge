@@ -1,6 +1,7 @@
 export default function ErrorLoadingBuilds({
     isLoading,
-    errors
+    errors,
+    title = 'Could not load builds'
 }){
 
     return(
@@ -9,11 +10,11 @@ export default function ErrorLoadingBuilds({
               <div
                   className="rounded-[14px] border border-dashed border-danger/35 bg-danger/10 px-6 py-14 text-center text-[#ff8a87]"
                   role="alert">
-                  <h3 className="mb-1.5 text-base font-semibold text-ink">Could not load builds</h3>
+                  <h3 className="mb-1.5 text-base font-semibold text-ink">{title}</h3>
                   <p>
                       {errors.isInternalError
                           ? 'Could not reach the server. Check your connection and try again.'
-                          : errors.general ?? Object.values(errors.messages)[0] ?? 'Something went wrong. Try again.'}
+                          : errors.general ?? Object.values(errors.messages ?? {})[0] ?? 'Something went wrong. Try again.'}
                   </p>
                   <button type="button"
                           onClick={() => window.location.reload()}

@@ -1,4 +1,4 @@
-import {publicRoutes} from "../ utils/ApplicationUrlPaths.js";
+import {protectedRoutes, publicRoutes} from "../ utils/ApplicationUrlPaths.js";
 import {Link, useNavigate} from "react-router";
 import useAuth from "../hooks/useAuth.js";
 import {mutate} from "../ utils/request.js";
@@ -17,8 +17,10 @@ export default function Build(
         likesCount,
         isLikedByCurrentUser,
         createdAt,
-        onLike,
-        showUser= true
+        onLike = () => {},
+        onDelete = () => {},
+        showUser= true,
+        showActions = false
     }){
 
     const {isAuthenticated} = useAuth();
@@ -51,6 +53,14 @@ export default function Build(
         try {
             await mutate(isLikedByCurrentUser ? 'DELETE' : 'POST', `/api/builds/${id}/like`);
             onLike();
+        }
+        catch {}
+    }
+
+    const onDeleteClick = async () => {
+        try {
+            await mutate('DELETE', `/api/builds/${id}`);
+            onDelete();
         }
         catch {}
     }
@@ -89,7 +99,16 @@ export default function Build(
                     <dd>{ram}</dd>
                 </dl>
                 <div className="mt-auto flex items-center justify-between gap-3 border-t border-line pt-3">
-                    {showUser ?
+                    {showActions ?
+                        (<div className="relative z-10 flex gap-2">
+                            <Link className="inline-flex h-8 items-center justify-center gap-2 rounded-md px-3 text-[13px] font-semibold whitespace-nowrap transition-colors border border-line-strong bg-field text-ink hover:border-ink-dim"
+                                  to={protectedRoutes.editBuild(id)}>Edit</Link>
+                            <button type="button"
+                                    onClick={onDeleteClick}
+                                    className="inline-flex h-8 cursor-pointer items-center justify-center gap-2 rounded-md px-3 text-[13px] font-semibold whitespace-nowrap transition-colors border border-danger/35 bg-danger/10 text-danger hover:bg-danger/20">Delete</button>
+                        </div>)
+                        :
+                        showUser ?
                         (<Link className="relative z-10 flex min-w-0 items-center gap-2 text-xs text-ink-muted hover:text-ink"
                                to={publicRoutes.userBuilds(owner.id)}>
                                     <span

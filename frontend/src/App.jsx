@@ -6,7 +6,7 @@ import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import BuildDetails from "./components/BuildDetails.jsx";
 import UserBuilds from "./components/UserBuilds.jsx";
-import CreateBuild from "./components/CreateBuild.jsx";
+import BuildForm from "./components/BuildForm.jsx";
 import EditBuild from "./components/EditBuild.jsx";
 import Profile from "./components/Profile.jsx";
 import NotFound from "./components/NotFound.jsx";
@@ -29,7 +29,7 @@ function App() {
             <Route path={publicRoutes.userBuilds(':id')} element={<UserBuilds />} />
 
             <Route element={<RouteGuard />}>
-                <Route path={protectedRoutes.createBuild} element={<CreateBuild />} />
+                <Route path={protectedRoutes.createBuild} element={<BuildForm />} />
                 <Route path={protectedRoutes.editBuild(':id')} element={<EditBuild />} />
                 <Route path={protectedRoutes.profile} element={<Profile />} />
             </Route>
