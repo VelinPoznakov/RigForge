@@ -38,11 +38,19 @@ export default function Home(){
 
     const onSearchSubmit = (formData) => {
         setSearch((formData.get('search') ?? '').trim());
+        setPage(1);
     }
 
     const clearSearch = () => {
         searchInputRef.current.value = '';
         setSearch('');
+        setPage(1);
+    }
+
+    const resetFilters = () => {
+        clearSearch();
+        setPurposes(rigPurposes[0]);
+        selectedFilter(filtersOptions[0]);
     }
 
     const openCloseSortOptions = () => {
@@ -155,14 +163,14 @@ export default function Home(){
 
                 {!isLoading && !errors && <BuildCollection builds={data.items} onLike={onRefresh}/>}
 
-                {data.items.length === 0 ?? (
+                {!isLoading && !errors && data.items.length === 0 && (
                     <div
-                        className="rounded-[14px] border border-dashed border-line-strong px-6 py-14 text-center text-ink-muted"
-                        hidden>
+                        className="rounded-[14px] border border-dashed border-line-strong px-6 py-14 text-center text-ink-muted">
                         <h3 className="mb-1.5 text-base font-semibold text-ink">No builds match your filters</h3>
                         <p>Try another purpose or clear the search.</p>
                         <button type="button"
-                                className="inline-flex h-9.5 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold whitespace-nowrap transition-colors border border-line-strong bg-field text-ink hover:border-ink-dim mt-5">Reset
+                                onClick={resetFilters}
+                                className="inline-flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold whitespace-nowrap transition-colors border border-line-strong bg-field text-ink hover:border-ink-dim mt-5">Reset
                             filters
                         </button>
                     </div>)}

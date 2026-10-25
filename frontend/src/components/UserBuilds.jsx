@@ -56,8 +56,8 @@ export default function UserBuilds(){
 
                 {!loading && !errors && <BuildCollection builds={data.items} onLike={onRefresh} showUser={false}/>}
 
-                {data.items.length === 0 && (
-                    <div className="rounded-[14px] border border-dashed border-line-strong px-6 py-14 text-center text-ink-muted" hidden>
+                {!loading && !errors && data.items.length === 0 && (
+                    <div className="rounded-[14px] border border-dashed border-line-strong px-6 py-14 text-center text-ink-muted">
                         <h3 className="mb-1.5 text-base font-semibold text-ink">No builds yet</h3>
                         <p>This user hasn't shared any builds.</p>
                     </div>

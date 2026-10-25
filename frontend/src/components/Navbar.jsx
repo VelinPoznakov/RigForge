@@ -5,7 +5,7 @@ import AuthContext from "../contexts/authContext.jsx";
 
 export default function Navbar(){
 
-    const {isAuthenticated} = useContext(AuthContext);
+    const {isAuthenticated, user} = useContext(AuthContext);
 
     const navlinkClass = ({isActive}) => {
         return `rounded-md px-2 py-2.5 text-[13px] transition-colors md:px-0 md:py-1.5 ${
@@ -46,8 +46,12 @@ export default function Navbar(){
                     </svg>
                     Post a build
                 </NavLink>
-                <NavLink className="grid shrink-0 place-items-center rounded-full border border-line-strong bg-avatar font-semibold text-ink-soft uppercase size-8 text-xs"
-                   to={protectedRoutes.profile} title="My profile">v</NavLink>
+                {isAuthenticated ? (
+                    <NavLink className="grid shrink-0 place-items-center rounded-full border border-line-strong bg-avatar font-semibold text-ink-soft uppercase size-8 text-xs"
+                       to={protectedRoutes.profile} title="My profile">{user.username[0]}</NavLink>
+                ) : (
+                    <NavLink className={navlinkClass} to={publicRoutes.login}>Log in</NavLink>
+                )}
             </div>
         </nav>
     )
